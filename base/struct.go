@@ -1,7 +1,8 @@
 package base
 
 import (
-	"domainGenerator/files"
+	"domainer/files"
+	"github.com/jinzhu/inflection"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 	"log"
@@ -27,12 +28,17 @@ func (e Entity) ToUpper() string {
 	return cases.Title(language.English).String(e.Value)
 }
 
+func (e Entity) ToPlural() string {
+	return inflection.Plural(e.Value)
+}
+
 func (d Domain) KeyValues() map[string]string {
 	return map[string]string{
 		"#{group}":           d.Group,
 		"#{project}":         d.Project,
 		"#{entityLowercase}": d.Entity.ToLower(),
 		"#{entity}":          d.Entity.ToUpper(),
+		"#{entityPlural}":    d.Entity.ToPlural(),
 	}
 }
 

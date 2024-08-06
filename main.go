@@ -1,7 +1,7 @@
 package main
 
 import (
-	. "domainGenerator/base"
+	. "domainer/base"
 	"fmt"
 	"log"
 	"os"
