@@ -34,7 +34,7 @@ public class #{entity}FacadeImpl implements #{entity}Facade {
     }
 
     @Override
-    public Update#{entity}Response update(Long id, Update#{entity}Request request) {
+    public Update#{entity}Response update(#{idType} id, Update#{entity}Request request) {
         #{entity} #{entityLowercase} = #{entityLowercase}Mapper.toModel(request);
 
         var existing#{entity} = #{entityLowercase}Service.get(id);
@@ -62,7 +62,7 @@ public class #{entity}FacadeImpl implements #{entity}Facade {
     }
 
     @Override
-    public Get#{entity}Response get(Long id) {
+    public Get#{entity}Response get(#{idType} id) {
         var #{entityLowercase} = #{entityLowercase}Service.get(id);
 
         if (#{entityLowercase}.isEmpty()) {
@@ -73,7 +73,7 @@ public class #{entity}FacadeImpl implements #{entity}Facade {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(#{idType} id) {
         #{entityLowercase}Service.delete(id);
     }
 }

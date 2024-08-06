@@ -11,11 +11,11 @@ import java.util.List;
 public interface #{entity}Facade {
     Create#{entity}Response create(Create#{entity}Request dto);
 
-    Update#{entity}Response update(Long id, Update#{entity}Request dto);
+    Update#{entity}Response update(#{idType} id, Update#{entity}Request dto);
 
     List<Get#{entity}Response> getAll();
 
-    Get#{entity}Response get(Long id);
+    Get#{entity}Response get(#{idType} id);
 
-    void delete(Long id);
+    void delete(#{idType} id);
 }

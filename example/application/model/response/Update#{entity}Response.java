@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class Update#{entity}Response {
-    private Long id;
+    private #{idType} id;
 }

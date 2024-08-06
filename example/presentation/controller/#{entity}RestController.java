@@ -29,7 +29,7 @@ public class #{entity}RestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Update#{entity}Response> update(@PathVariable Long id, @Valid @RequestBody Update#{entity}Request request) {
+    public ResponseEntity<Update#{entity}Response> update(@PathVariable #{idType} id, @Valid @RequestBody Update#{entity}Request request) {
         var response = #{entityLowercase}Facade.update(id, request);
 
         return ResponseEntity.ok(response);
@@ -43,14 +43,14 @@ public class #{entity}RestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Get#{entity}Response> get(@PathVariable Long id) {
+    public ResponseEntity<Get#{entity}Response> get(@PathVariable #{idType} id) {
         var response = #{entityLowercase}Facade.get(id);
 
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable #{idType} id) {
         #{entityLowercase}Facade.delete(id);
 
         return ResponseEntity.noContent()

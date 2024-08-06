@@ -5,5 +5,5 @@ import az.gov.dlp.domain.service.CrudService;
 
 import java.util.Collection;
 
-public interface #{entity}Service extends CrudService<#{entity}, Long> {
+public interface #{entity}Service extends CrudService<#{entity}, #{idType}> {
 }

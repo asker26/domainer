@@ -1,4 +1,4 @@
-package base
+package utils
 
 import (
 	"domainer/files"
@@ -16,8 +16,8 @@ type Entity struct {
 type Domain struct {
 	Group   string
 	Project string
+	IdType  string
 	Entity  Entity
-	Path    string
 }
 
 func (e Entity) ToLower() string {
@@ -39,6 +39,7 @@ func (d Domain) KeyValues() map[string]string {
 		"#{entityLowercase}": d.Entity.ToLower(),
 		"#{entity}":          d.Entity.ToUpper(),
 		"#{entityPlural}":    d.Entity.ToPlural(),
+		"#{idType}":          d.IdType,
 	}
 }
 

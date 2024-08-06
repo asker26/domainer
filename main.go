@@ -1,49 +1,59 @@
 package main
 
 import (
-	. "domainer/base"
+	"bufio"
+	"domainer/java"
+	"domainer/utils"
 	"fmt"
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func main() {
-	var group, project, entity string
 
-	// Get inputs from user
-	fmt.Print("Enter group: ")
-	_, err := fmt.Scanln(&group)
-	if err != nil {
-		log.Fatal(err)
+	if len(os.Args) != 2 {
+		log.Fatal("Please provide entity like `domainer <entity>` ")
+		return
 	}
 
-	fmt.Print("Enter project: ")
-	_, err = fmt.Scanln(&project)
+	entity := os.Args[1]
+
+	idType, err := scanForId()
 	if err != nil {
 		log.Fatal(err)
+		return
 	}
 
-	fmt.Print("Enter entity: ")
-	_, err = fmt.Scanln(&entity)
+	java.CheckForGradle()
+
+	group, project, err := java.GetProps()
 	if err != nil {
 		log.Fatal(err)
+		return
 	}
 
-	var domain = Domain{
+	fmt.Printf("Creating entity \"%s\"...\n", entity)
+
+	var domain = utils.Domain{
 		Group:   group,
 		Project: project,
-		Entity: Entity{
+		IdType:  idType,
+		Entity: utils.Entity{
 			Value: entity,
 		},
 	}
 
-	err = os.RemoveAll(domain.Entity.ToLower())
+	featureDst, err := java.GetFeatureDestination(group, project)
 	if err != nil {
 		log.Fatal(err)
+		return
 	}
 
-	err = domain.CopyDir(getExamplePath(), domain.Entity.ToLower())
+	domainDst := fmt.Sprintf("%s/%s", featureDst, domain.Entity.ToLower())
+
+	err = domain.CopyDir(getExamplePath(), domainDst)
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -59,4 +69,34 @@ func getExamplePath() string {
 	exPath := filepath.Dir(ex)
 
 	return filepath.Join(exPath, "example")
+}
+
+func scanForId() (idType string, err error) {
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Print("Enter your Id type(Default: Long): ")
+
+	idType, err = reader.ReadString('\n')
+	if err != nil {
+		return
+	}
+
+	idType = strings.Replace(idType, "\n", "", -1)
+
+	if len(idType) == 0 {
+		return "Long", nil
+	}
+
+	allowedTypes := []string{
+		"String",
+		"Long",
+		"Integer",
+	}
+
+	if !utils.Contains[string](allowedTypes, idType) {
+		fmt.Println(fmt.Sprintf("invalid IdType. Allowed types are: %s", strings.Join(allowedTypes, ", ")))
+		return scanForId()
+	}
+
+	return
 }
