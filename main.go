@@ -20,7 +20,20 @@ func main() {
 
 	entity := os.Args[1]
 
-	idType, err := scanForId()
+	idType, err := scanFor("Id", "Long", []string{
+		"String",
+		"Long",
+		"Integer",
+	})
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	template, err := scanFor("template", "mybatis", []string{
+		"mybatis",
+		"jpa",
+	})
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -57,14 +70,67 @@ func main() {
 
 	domainDst := fmt.Sprintf("%s/%s", featureDst, domain.Entity.ToLower())
 
-	err = domain.CopyDir(getTemplatePath(), domainDst)
+	err = domain.CopyDir(getTemplatePath(template), domainDst)
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
 }
 
-func getTemplatePath() string {
+func scanForTemplate() (template string, err error) {
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Print("Enter your template(Default: mybatis): ")
+
+	template, err = reader.ReadString('\n')
+	if err != nil {
+		return
+	}
+
+	template = strings.Replace(template, "\n", "", -1)
+
+	if len(template) == 0 {
+		return "mybatis", nil
+	}
+
+	allowedTemplates := []string{
+		"mybatis",
+		"jpa",
+	}
+
+	if !utils.Contains[string](allowedTemplates, template) {
+		fmt.Println(fmt.Sprintf("invalid template. Allowed templates are: %s", strings.Join(allowedTemplates, ", ")))
+		return scanForTemplate()
+	}
+
+	return
+}
+
+func scanFor(key string, defaultValue string, whiteList []string) (myVal string, err error) {
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Print(fmt.Sprintf("Enter your %s (Default: %s): ", key, defaultValue))
+
+	myVal, err = reader.ReadString('\n')
+	if err != nil {
+		return
+	}
+
+	myVal = strings.Replace(myVal, "\n", "", -1)
+
+	if len(myVal) == 0 {
+		return defaultValue, nil
+	}
+
+	if !utils.Contains[string](whiteList, myVal) {
+		fmt.Println(fmt.Sprintf("invalid %s. Allowed %ss are: %s", key, key, strings.Join(whiteList, ", ")))
+		return scanFor(key, defaultValue, whiteList)
+	}
+
+	return
+}
+
+func getTemplatePath(template string) string {
 	ex, err := os.Executable()
 	if err != nil {
 		log.Fatal(err)
@@ -72,7 +138,7 @@ func getTemplatePath() string {
 
 	exPath := filepath.Dir(ex)
 
-	return filepath.Join(exPath, "templates/mybatis")
+	return filepath.Join(exPath, fmt.Sprintf("templates/%s", template))
 }
 
 func scanForId() (idType string, err error) {

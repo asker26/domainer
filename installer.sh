@@ -14,7 +14,11 @@ install_go() {
 
 if ! command -v go &> /dev/null
 then
+  if ! command -v brew &> /dev/null
+  then echo "You need to have homebrew installed to download go..." && exit
+  else
     install_go
+  fi
 else
     echo "Go is already installed."
 fi
