@@ -10,20 +10,17 @@ import #{group}.#{project}.feature.#{entityLowercase}.application.model.response
 import #{group}.#{project}.feature.#{entityLowercase}.application.model.response.#{entityLowercase}.Update#{entity}Response;
 import #{group}.#{project}.feature.#{entityLowercase}.domain.service.#{entity}Service;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Log4j2
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = lombok.AccessLevel.PRIVATE)
 public class #{entity}FacadeImpl implements #{entity}Facade {
-    #{entity}Service#{entityLowercase}Service;
-    #{entity}Mapper#{entityLowercase}Mapper;
+    private final #{entity}Service#{entityLowercase}Service;
+    private final #{entity}Mapper#{entityLowercase}Mapper;
 
     @Override
     public Create#{entity}Response create(Create#{entity}Request request) {
@@ -34,7 +31,7 @@ public class #{entity}FacadeImpl implements #{entity}Facade {
     }
 
     @Override
-    public Update#{entity}Response update(UUID id, Update#{entity}Request request) {
+    public Update#{entity}Response update(Long id, Update#{entity}Request request) {
         var #{entityLowercase}Model = #{entityLowercase}Mapper.toModel(request);
 
         var existing#{entity} = #{entityLowercase}Service.get(id);
@@ -51,7 +48,7 @@ public class #{entity}FacadeImpl implements #{entity}Facade {
     }
 
     @Override
-    public Get#{entity}Response get(UUID id) {
+    public Get#{entity}Response get(Long id) {
         var existing#{entity} = #{entityLowercase}Service.get(id);
 
         if (existing#{entity}.isEmpty()) {
@@ -73,7 +70,7 @@ public class #{entity}FacadeImpl implements #{entity}Facade {
     }
 
     @Override
-    public void delete(UUID id) {
+    public void delete(Long id) {
         var existing#{entity} = #{entityLowercase}Service.get(id);
 
         if (existing#{entity}.isEmpty()) {

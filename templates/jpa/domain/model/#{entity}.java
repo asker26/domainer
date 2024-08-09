@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -15,18 +14,6 @@ import java.util.UUID;
 @Table(name = "#{entityPlural}")
 public class #{entity} {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-
-    private String name;
-
-    private String description;
-
-    private Long longitude;
-
-    private Long latitude;
-
-    private LocalDateTime modifiedAt;
-
-    private LocalDateTime createdAt;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 }

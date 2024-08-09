@@ -12,38 +12,37 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/quests")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class #{entity}RestController {
-    private final #{entity}Facade#{entityLowercase}Facade;
+    private final #{entity}Facade #{entityLowercase}Facade;
 
     @GetMapping
     public ResponseEntity<List<Get#{entity}Response>> get#{entity}() {
-        return ResponseEntity.ok(questFacade.getAll());
+        return ResponseEntity.ok(#{entityLowercase}Facade.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Get#{entity}Response> get(@PathVariable("id") UUID id) {
-        return ResponseEntity.ok(questFacade.get(id));
+    public ResponseEntity<Get#{entity}Response> get(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(#{entityLowercase}Facade.get(id));
     }
 
     @PostMapping
     public ResponseEntity<Create#{entity}Response> create(@RequestBody Create#{entity}Request request) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(questFacade.create(request));
+                .body(#{entityLowercase}Facade.create(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Update#{entity}Response> update(@PathVariable("id") UUID id, @RequestBody Update#{entity}Request request) {
-        return ResponseEntity.ok(questFacade.update(id, request));
+    public ResponseEntity<Update#{entity}Response> update(@PathVariable("id") Long id, @RequestBody Update#{entity}Request request) {
+        return ResponseEntity.ok(#{entityLowercase}Facade.update(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") UUID id) {
+    public void delete(@PathVariable("id") Long id) {
        #{entityLowercase}Facade.delete(id);
     }
 }

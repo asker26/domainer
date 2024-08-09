@@ -8,25 +8,24 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class #{entity}ServiceImpl implements #{entity}Service {
-    private final #{entity}Repository#{entityLowercase}Repository;
+    private final #{entity}Repository #{entityLowercase}Repository;
 
     @Override
-    public #{entity} create(#{entity}#{entityLowercase}) {
-        return #{entityLowercase}Repository.save(quest);
+    public #{entity} create(#{entity} #{entityLowercase}) {
+        return #{entityLowercase}Repository.save(#{entityLowercase});
     }
 
     @Override
-    public #{entity} update(#{entity}#{entityLowercase}) {
-        return #{entityLowercase}Repository.save(quest);
+    public #{entity} update(#{entity} #{entityLowercase}) {
+        return #{entityLowercase}Repository.save(#{entityLowercase});
     }
 
     @Override
-    public Optional<#{entity}> get(UUID id) {
+    public Optional<#{entity}> get(Long id) {
         return #{entityLowercase}Repository.findById(id);
     }
 
@@ -36,7 +35,7 @@ public class #{entity}ServiceImpl implements #{entity}Service {
     }
 
     @Override
-    public void delete(UUID id) {
+    public void delete(Long id) {
        #{entityLowercase}Repository.deleteById(id);
     }
 }
