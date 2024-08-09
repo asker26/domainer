@@ -26,7 +26,11 @@ func main() {
 		return
 	}
 
-	java.CheckForGradle()
+	err = java.CheckForGradle()
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
 
 	group, project, err := java.GetProps()
 	if err != nil {
