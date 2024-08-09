@@ -32,14 +32,30 @@ func (e Entity) ToPlural() string {
 	return inflection.Plural(e.Value)
 }
 
-func (d Domain) KeyValues() map[string]string {
-	return map[string]string{
-		"#{group}":           d.Group,
-		"#{project}":         d.Project,
-		"#{entityLowercase}": d.Entity.ToLower(),
-		"#{entity}":          d.Entity.ToUpper(),
-		"#{entityPlural}":    d.Entity.ToPlural(),
-		"#{idType}":          d.IdType,
+func (d Domain) KeyValues() map[string]files.Match {
+	return map[string]files.Match{
+		"#{group}":           {Value: d.Group},
+		"#{project}":         {Value: d.Project},
+		"#{entityLowercase}": {Value: d.Entity.ToLower()},
+		"#{entity}":          {Value: d.Entity.ToUpper()},
+		"#{entityPlural}":    {Value: d.Entity.ToPlural()},
+		"#{idType}": {Value: d.IdType, Callback: func(content string) string {
+			if strings.ToLower(d.IdType) != "uuid" {
+				return content
+			}
+
+			lines := strings.Split(content, "\n")
+
+			for i, line := range lines {
+				if strings.HasPrefix(line, "import ") {
+					lines = append(lines[:i+1], lines[i:]...)
+					lines[i+1] = `import java.util.UUID;`
+					break
+				}
+			}
+
+			return strings.Join(lines, "\n")
+		}},
 	}
 }
 
@@ -55,8 +71,8 @@ func (d Domain) CopyAndReplaceFile(src string, dst string) (err error) {
 }
 
 func (d Domain) ReplaceAllInText(text string) string {
-	for old, newTxt := range d.KeyValues() {
-		text = strings.ReplaceAll(text, old, newTxt)
+	for old, match := range d.KeyValues() {
+		text = strings.ReplaceAll(text, old, match.Value)
 	}
 
 	return text

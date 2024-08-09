@@ -24,11 +24,14 @@ func main() {
 		"String",
 		"Long",
 		"Integer",
+		"UUID",
 	})
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
+
+	fmt.Println(idType)
 
 	template, err := scanFor("template", "mybatis", []string{
 		"mybatis",
@@ -77,35 +80,6 @@ func main() {
 	}
 }
 
-func scanForTemplate() (template string, err error) {
-	reader := bufio.NewReader(os.Stdin)
-
-	fmt.Print("Enter your template(Default: mybatis): ")
-
-	template, err = reader.ReadString('\n')
-	if err != nil {
-		return
-	}
-
-	template = strings.Replace(template, "\n", "", -1)
-
-	if len(template) == 0 {
-		return "mybatis", nil
-	}
-
-	allowedTemplates := []string{
-		"mybatis",
-		"jpa",
-	}
-
-	if !utils.Contains[string](allowedTemplates, template) {
-		fmt.Println(fmt.Sprintf("invalid template. Allowed templates are: %s", strings.Join(allowedTemplates, ", ")))
-		return scanForTemplate()
-	}
-
-	return
-}
-
 func scanFor(key string, defaultValue string, whiteList []string) (myVal string, err error) {
 	reader := bufio.NewReader(os.Stdin)
 
@@ -139,34 +113,4 @@ func getTemplatePath(template string) string {
 	exPath := filepath.Dir(ex)
 
 	return filepath.Join(exPath, fmt.Sprintf("templates/%s", template))
-}
-
-func scanForId() (idType string, err error) {
-	reader := bufio.NewReader(os.Stdin)
-
-	fmt.Print("Enter your Id type(Default: Long): ")
-
-	idType, err = reader.ReadString('\n')
-	if err != nil {
-		return
-	}
-
-	idType = strings.Replace(idType, "\n", "", -1)
-
-	if len(idType) == 0 {
-		return "Long", nil
-	}
-
-	allowedTypes := []string{
-		"String",
-		"Long",
-		"Integer",
-	}
-
-	if !utils.Contains[string](allowedTypes, idType) {
-		fmt.Println(fmt.Sprintf("invalid IdType. Allowed types are: %s", strings.Join(allowedTypes, ", ")))
-		return scanForId()
-	}
-
-	return
 }

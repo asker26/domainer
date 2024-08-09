@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface #{entity}Service {
-    #{entity} create(#{entity}#{entityLowercase});
+    #{entity} create(#{entity} #{entityLowercase});
 
-    #{entity} update(#{entity}#{entityLowercase});
+    #{entity} update(#{entity} #{entityLowercase});
 
-    Optional<#{entity}> get(Long id);
+    Optional<#{entity}> get(#{idType} id);
 
     List<#{entity}> getAll();
 
-    void delete(Long id);
+    void delete(#{idType} id);
 }

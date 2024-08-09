@@ -5,7 +5,12 @@ import (
 	"strings"
 )
 
-func ReplaceAll(filename string, matchers map[string]string) error {
+type Match struct {
+	Value    string
+	Callback func(content string) string
+}
+
+func ReplaceAll(filename string, matchers map[string]Match) error {
 	// Read the file
 	content, err := os.ReadFile(filename)
 	if err != nil {
@@ -14,8 +19,12 @@ func ReplaceAll(filename string, matchers map[string]string) error {
 
 	strContent := string(content)
 
-	for old, newTxt := range matchers {
-		strContent = strings.ReplaceAll(strContent, old, newTxt)
+	for old, match := range matchers {
+		if match.Callback != nil && strings.Contains(strContent, old) {
+			strContent = match.Callback(strContent)
+		}
+
+		strContent = strings.ReplaceAll(strContent, old, match.Value)
 	}
 
 	// Write new content back to the file

@@ -1,4 +1,4 @@
-package #{group}.#{project}.feature.#{entityLowercase}.application.model.request.quest;
+package #{group}.#{project}.feature.#{entityLowercase}.application.model.request;
 
 import lombok.Data;
 

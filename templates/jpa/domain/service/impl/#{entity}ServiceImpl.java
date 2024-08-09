@@ -25,7 +25,7 @@ public class #{entity}ServiceImpl implements #{entity}Service {
     }
 
     @Override
-    public Optional<#{entity}> get(Long id) {
+    public Optional<#{entity}> get(#{idType} id) {
         return #{entityLowercase}Repository.findById(id);
     }
 
@@ -35,7 +35,7 @@ public class #{entity}ServiceImpl implements #{entity}Service {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(#{idType} id) {
        #{entityLowercase}Repository.deleteById(id);
     }
 }

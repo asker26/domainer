@@ -15,5 +15,5 @@ import java.time.LocalDateTime;
 public class #{entity} {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private #{idType} id;
 }
