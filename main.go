@@ -53,14 +53,14 @@ func main() {
 
 	domainDst := fmt.Sprintf("%s/%s", featureDst, domain.Entity.ToLower())
 
-	err = domain.CopyDir(getExamplePath(), domainDst)
+	err = domain.CopyDir(getTemplatePath(), domainDst)
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
 }
 
-func getExamplePath() string {
+func getTemplatePath() string {
 	ex, err := os.Executable()
 	if err != nil {
 		log.Fatal(err)
@@ -68,7 +68,7 @@ func getExamplePath() string {
 
 	exPath := filepath.Dir(ex)
 
-	return filepath.Join(exPath, "example")
+	return filepath.Join(exPath, "templates/mybatis")
 }
 
 func scanForId() (idType string, err error) {
