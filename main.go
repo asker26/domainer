@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
 
@@ -69,14 +70,20 @@ func main() {
 		SlugPascalCase:   slugPascalCase,
 	}
 
-	// Create destination directory based on the entity name
-	currentDir, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-		return
+	// Determine destination directory
+	var domainDst string
+	if wpPluginsDir := findWordPressPluginsDir(); wpPluginsDir != "" {
+		// If we're in a WordPress installation, create in wp-content/plugins
+		domainDst = filepath.Join(wpPluginsDir, fmt.Sprintf("booknetic-%s", strings.ToLower(domain.Entity)))
+	} else {
+		// Otherwise, create in current directory
+		currentDir, err := os.Getwd()
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+		domainDst = filepath.Join(currentDir, fmt.Sprintf("booknetic-%s", strings.ToLower(domain.Entity)))
 	}
-
-	domainDst := filepath.Join(currentDir, fmt.Sprintf("booknetic-%s", strings.ToLower(domain.Entity)))
 
 	err = os.MkdirAll(domainDst, os.ModePerm)
 	if err != nil {
@@ -110,7 +117,7 @@ func main() {
 
 	// Set composer process environment to include PHP path
 	cmd.Env = append(os.Environ(),
-		fmt.Sprintf("PATH=%s;%s", filepath.Dir(phpPath), os.Getenv("PATH")),
+		fmt.Sprintf("PATH=%s%c%s", filepath.Dir(phpPath), os.PathListSeparator, os.Getenv("PATH")),
 		fmt.Sprintf("PHP_BINARY=%s", phpPath),
 	)
 
@@ -298,18 +305,58 @@ func commandExists(cmd string) bool {
 	return err == nil
 }
 
-// Find PHP using CMD's where command
-func findPHP() string {
-	cmd := exec.Command("cmd", "/c", "where php")
-	output, err := cmd.Output()
+// Check if current directory is inside a WordPress installation
+func findWordPressPluginsDir() string {
+	// Start from current directory
+	currentDir, err := os.Getwd()
 	if err != nil {
 		return ""
 	}
 
-	// Get the first line of output (first PHP found in PATH)
-	paths := strings.Split(strings.TrimSpace(string(output)), "\n")
-	if len(paths) > 0 {
-		return strings.TrimSpace(paths[0])
+	// Walk up the directory tree
+	dir := currentDir
+	for {
+		// Check if this is a WordPress installation (wp-content/plugins exists)
+		pluginsDir := filepath.Join(dir, "wp-content", "plugins")
+		if _, err := os.Stat(pluginsDir); err == nil {
+			return pluginsDir
+		}
+
+		// Go up one directory
+		parent := filepath.Dir(dir)
+		if parent == dir {
+			// We've reached the root
+			break
+		}
+		dir = parent
+	}
+
+	return ""
+}
+
+// Find PHP path based on the operating system
+func findPHP() string {
+	if runtime.GOOS == "windows" {
+		// Use where command on Windows
+		cmd := exec.Command("cmd", "/c", "where php")
+		output, err := cmd.Output()
+		if err != nil {
+			return ""
+		}
+
+		// Get the first line of output (first PHP found in PATH)
+		paths := strings.Split(strings.TrimSpace(string(output)), "\n")
+		if len(paths) > 0 {
+			return strings.TrimSpace(paths[0])
+		}
+	} else {
+		// Use which command on Unix-like systems (macOS, Linux)
+		cmd := exec.Command("which", "php")
+		output, err := cmd.Output()
+		if err != nil {
+			return ""
+		}
+		return strings.TrimSpace(string(output))
 	}
 
 	return ""
