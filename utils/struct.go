@@ -14,10 +14,12 @@ type Entity struct {
 }
 
 type Domain struct {
-	Group   string
-	Project string
-	IdType  string
-	Entity  Entity
+	Group            string
+	Project          string
+	Entity           Entity
+	AddonTitle       string
+	AddonDescription string
+	SlugPascalCase   string
 }
 
 func (e Entity) ToLower() string {
@@ -39,23 +41,10 @@ func (d Domain) KeyValues() map[string]files.Match {
 		"#{entityLowercase}": {Value: d.Entity.ToLower()},
 		"#{entity}":          {Value: d.Entity.ToUpper()},
 		"#{entityPlural}":    {Value: d.Entity.ToPlural()},
-		"#{idType}": {Value: d.IdType, Callback: func(content string) string {
-			if strings.ToLower(d.IdType) != "uuid" {
-				return content
-			}
-
-			lines := strings.Split(content, "\n")
-
-			for i, line := range lines {
-				if strings.HasPrefix(line, "import ") {
-					lines = append(lines[:i+1], lines[i:]...)
-					lines[i+1] = `import java.util.UUID;`
-					break
-				}
-			}
-
-			return strings.Join(lines, "\n")
-		}},
+		"{AddonTitle}":       {Value: d.AddonTitle},
+		"{AddonDescription}": {Value: d.AddonDescription},
+		"{SlugPascalCase}":   {Value: d.SlugPascalCase},
+		"{slug}":             {Value: strings.ToLower(d.Entity.Value)},
 	}
 }
 
@@ -76,4 +65,11 @@ func (d Domain) ReplaceAllInText(text string) string {
 	}
 
 	return text
+}
+
+func (d Domain) ReplacePlaceholders(dst string) error {
+	// Logic to replace placeholders in the files at the destination path
+	// This is a placeholder implementation
+	log.Printf("Replacing placeholders in %s", dst)
+	return nil
 }

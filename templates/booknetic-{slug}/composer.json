@@ -1,0 +1,13 @@
+{
+	"autoload": {
+		"psr-4": {
+			"BookneticAddon\\{SlugPascalCase}\\": "App/"
+		}
+	},
+
+	"config": {
+		"platform": {
+			"php": "7.4"
+		}
+	}
+}

@@ -1,0 +1,13 @@
+{
+	"autoload": {
+		"psr-4": {
+			"BookneticAddon\\ResourceManagement\\": "App/"
+		}
+	},
+
+	"config": {
+		"platform": {
+			"php": "7.4"
+		}
+	}
+}
