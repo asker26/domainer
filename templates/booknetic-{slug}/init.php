@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) or exit;
 
 require_once __DIR__ . '/vendor-{slug}/autoload.php';
 
-add_filter('bkntc_addons_load', function ($addons)
+add_filter('bkntc_addons_load', static function ($addons)
 {
     $addons[ \BookneticAddon\{SlugPascalCase}\{SlugPascalCase}Addon::getAddonSlug() ] = new \BookneticAddon\{SlugPascalCase}\{SlugPascalCase}Addon();
 

@@ -12,20 +12,22 @@ function bkntc__ ( $text, $params = [], $esc = true )
 
 class {SlugPascalCase}Addon extends AddonLoader
 {
-	public function init ()
+	public function init (): void
 	{
 		Capabilities::registerTenantCapability( '{slug}', bkntc__('{AddonTitle}') );
 
-		if( ! Capabilities::tenantCan( '{slug}' ) )
-			return;
+		if( ! Capabilities::tenantCan( '{slug}' ) ) {
+		    return;
+		}
 
 		Capabilities::register( '{slug}', bkntc__('{AddonTitle}') );
 	}
 
-	public function initBackend ()
+	public function initBackend (): void
 	{
-		if( ! Capabilities::tenantCan( '{slug}' ) )
-			return;
+		if( ! Capabilities::tenantCan( '{slug}' ) ) {
+		    return;
+		}
 
         if( ! Capabilities::userCan( '{slug}' ) ) {
             return;
