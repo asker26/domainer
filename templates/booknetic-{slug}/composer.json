@@ -6,6 +6,7 @@
 	},
 
 	"config": {
+		"vendor-dir": "vendor-{slug}",
 		"platform": {
 			"php": "7.4"
 		}
