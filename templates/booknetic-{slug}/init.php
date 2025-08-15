@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) or exit;
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor-{slug}/autoload.php';
 
 add_filter('bkntc_addons_load', function ($addons)
 {
